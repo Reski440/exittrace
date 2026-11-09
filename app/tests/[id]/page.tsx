@@ -3,8 +3,8 @@ import { notFound } from 'next/navigation'
 import { getRun } from '../../../lib/store'
 export const dynamic = 'force-dynamic'
 const sev = (s: string) => ({ Critical: 'text-red-400', High: 'text-orange-400', Medium: 'text-yellow-300', Low: 'text-sky-300', Informational: 'text-muted' }[s] ?? '')
-export default function TestDetails({ params }: { params: { id: string } }) {
-  const run = getRun(params.id)
+export default async function TestDetails({ params }: { params: { id: string } }) {
+  const run = await getRun(params.id)
   if (!run) notFound()
   return (
     <div>

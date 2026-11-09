@@ -5,8 +5,8 @@ export const dynamic = 'force-dynamic'
 
 const sevColor: Record<string, string> = { Critical: 'text-red-400', High: 'text-orange-400', Medium: 'text-yellow-300', Low: 'text-sky-300', Informational: 'text-muted' }
 
-export default function Dashboard() {
-  const runs = listRuns()
+export default async function Dashboard() {
+  const runs = await listRuns()
   const s = dashboardStats(runs)
   return (
     <div>

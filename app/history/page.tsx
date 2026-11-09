@@ -1,8 +1,8 @@
 import Link from 'next/link'
 import { listRuns } from '../../lib/store'
 export const dynamic = 'force-dynamic'
-export default function History() {
-  const runs = listRuns()
+export default async function History() {
+  const runs = await listRuns()
   return (
     <div>
       <h1 className="text-2xl font-bold">Test history</h1>

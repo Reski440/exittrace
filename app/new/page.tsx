@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 const initial = {
@@ -14,6 +14,19 @@ export default function NewTest() {
   const [form, setForm] = useState(initial)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
+  // Server-side local-target permission: the checkbox is only usable
+  // when the server operator enabled ALLOW_LOCAL_TARGETS. The server
+  // enforces this regardless of what the form sends.
+  const [serverAllowsLocal, setServerAllowsLocal] = useState<boolean | null>(null)
+  useEffect(() => {
+    fetch('/api/config', { cache: 'no-store' })
+      .then((r) => r.json())
+      .then((d) => {
+        setServerAllowsLocal(!!d.allowLocalTargets)
+        if (!d.allowLocalTargets) setForm((f) => ({ ...f, allowLocalTargets: false }))
+      })
+      .catch(() => setServerAllowsLocal(false))
+  }, [])
   const router = useRouter()
   const set = (k: string, v: string | boolean) => setForm((f) => ({ ...f, [k]: v }))
 
@@ -48,7 +61,8 @@ export default function NewTest() {
           <div><label htmlFor="password">Password (session-only)</label><input id="password" type="password" value={form.password} onChange={(e) => set('password', e.target.value)} required autoComplete="off" /></div>
         </div>
         <label htmlFor="protectedMarker">Protected-page marker text</label><input id="protectedMarker" value={form.protectedMarker} onChange={(e) => set('protectedMarker', e.target.value)} />
-        <label className="mt-4 flex items-center gap-2 text-sm normal-case"><input type="checkbox" checked={form.allowLocalTargets} onChange={(e) => set('allowLocalTargets', e.target.checked)} className="!w-auto" /> Allow localhost / private targets (controlled local testing mode only)</label>
+        <label className="mt-4 flex items-center gap-2 text-sm normal-case"><input type="checkbox" checked={form.allowLocalTargets} disabled={serverAllowsLocal === false} onChange={(e) => set('allowLocalTargets', e.target.checked)} className="!w-auto" /> Allow localhost / private targets (controlled local testing mode only)</label>
+        {serverAllowsLocal === false && <p className="mt-2 text-sm text-muted">Localhost / private targets are blocked by this server. The server operator must set ALLOW_LOCAL_TARGETS=true in the server environment to enable them — ticking this box alone does not work.</p>}
         {error && <p role="alert" className="mt-4 rounded-lg border border-red-900 bg-red-950 p-3 text-sm">{error}</p>}
         <button disabled={busy} className="mt-6 rounded-lg bg-sky-600 px-5 py-2 text-sm font-medium disabled:opacity-50">{busy ? 'Running test — this takes about 20–40 seconds…' : 'Run test'}</button>
       </form>
