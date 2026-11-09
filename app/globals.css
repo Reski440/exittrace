@@ -1,0 +1,6 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+body { background: #0a0f14; color: #e6edf3; }
+input, select, textarea { background: #0a0f14; border: 1px solid #26313b; border-radius: 8px; padding: 10px 12px; width: 100%; color: #e6edf3; }
+label { display: block; font-size: 13px; color: #8b98a5; margin: 12px 0 4px; }
