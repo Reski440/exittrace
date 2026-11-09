@@ -3,7 +3,7 @@ import { getRun } from '../../../../../lib/store'
 import { reportHtml, reportJson } from '../../../../../lib/report'
 export const dynamic = 'force-dynamic'
 export async function GET(req: Request, { params }: { params: { id: string } }) {
-  const run = getRun(params.id)
+  const run = await getRun(params.id)
   if (!run) return NextResponse.json({ error: 'not found' }, { status: 404 })
   const format = new URL(req.url).searchParams.get('format') ?? 'json'
   if (format === 'html') {
