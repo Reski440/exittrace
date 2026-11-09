@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { randomUUID } from 'node:crypto'
 import { analyze } from './analysis'
-import { validateTargetUrl } from './ssrf'
+import { validateTargetUrl, effectiveAllowLocalTargets } from './ssrf'
 import type { HttpDetail, TestConfig, TestRun, TestStep } from './types'
 
 const MARKER_FALLBACKS = ['SECRET', 'DASHBOARD', 'PROFILE', 'Welcome', 'protected']
@@ -28,8 +28,11 @@ export async function runTest(cfg: TestConfig): Promise<TestRun> {
   }
 
   // Validate every URL up front (SSRF guard). Credentials are never logged.
+  // The client flag is only honoured when the server operator enabled
+  // local targets (ALLOW_LOCAL_TARGETS / WORKER_ALLOW_LOCAL_TARGETS).
+  const allowLocal = effectiveAllowLocalTargets(!!cfg.allowLocalTargets)
   for (const [key, raw] of [['target', cfg.targetUrl], ['login', cfg.loginUrl], ['protected', cfg.protectedUrl], ['logout', cfg.logoutUrl]] as const) {
-    const v = await validateTargetUrl(raw, !!cfg.allowLocalTargets)
+    const v = await validateTargetUrl(raw, allowLocal)
     if (!v.ok) {
       return failRun(id, cfg, started, steps, httpDetails, consoleErrors, `URL validation failed for ${key}: ${v.error}`)
     }
