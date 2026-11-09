@@ -1,0 +1,377 @@
+[
+  {
+    "id": "d953ec30-2179-4f8c-a5ce-4726d8684566",
+    "name": "Worker check — dashboard page",
+    "targetUrl": "http://localhost:4001",
+    "protectedUrl": "http://localhost:4001/dashboard",
+    "createdAt": "2026-11-09T10:12:06.944Z",
+    "durationMs": 4314,
+    "status": "passed",
+    "steps": [
+      {
+        "id": "Open login page",
+        "label": "Open login page",
+        "status": "passed",
+        "detail": "Loaded http://localhost:4001/ (HTTP complete)",
+        "durationMs": 97
+      },
+      {
+        "id": "Authenticate",
+        "label": "Authenticate",
+        "status": "passed",
+        "detail": "Submitted login form; now at http://localhost:4001/dashboard",
+        "durationMs": 949
+      },
+      {
+        "id": "Open protected page while authenticated",
+        "label": "Open protected page while authenticated",
+        "status": "passed",
+        "detail": "Protected page loaded while authenticated (http://localhost:4001/dashboard)",
+        "durationMs": 26
+      },
+      {
+        "id": "Log out",
+        "label": "Log out",
+        "status": "passed",
+        "detail": "Visited logout URL; now at http://localhost:4001/",
+        "durationMs": 517
+      },
+      {
+        "id": "Revisit protected page after logout (direct)",
+        "label": "Revisit protected page after logout (direct)",
+        "status": "passed",
+        "detail": "Direct revisit after logout: HTTP 200, marker present: false, login form shown: true",
+        "durationMs": 33
+      },
+      {
+        "id": "Back navigation after logout",
+        "label": "Back navigation after logout",
+        "status": "passed",
+        "detail": "Back landed on http://localhost:4001/; marker visible: false; new protected request made: true",
+        "durationMs": 619
+      },
+      {
+        "id": "Forward navigation after logout",
+        "label": "Forward navigation after logout",
+        "status": "info",
+        "detail": "Forward landed on http://localhost:4001/",
+        "durationMs": 514
+      },
+      {
+        "id": "Reload protected page after logout",
+        "label": "Reload protected page after logout",
+        "status": "passed",
+        "detail": "Reload after logout: HTTP 200, marker present: false",
+        "durationMs": 21
+      },
+      {
+        "id": "Capture evidence screenshot",
+        "label": "Capture evidence screenshot",
+        "status": "passed",
+        "detail": "Screenshot captured (retained only for this run; delete after review if it shows sensitive content)",
+        "durationMs": 88
+      }
+    ],
+    "findings": [
+      {
+        "id": "F-1",
+        "severity": "Informational",
+        "title": "No logout exposure observed in this run",
+        "detail": "The protected page was blocked after logout, Back/Forward did not expose private content, and cache headers were checked. This run found no evidence of post-logout exposure for the tested URLs.",
+        "evidence": "See the step-by-step results in this test run.",
+        "recommendation": "Re-run after any auth, routing, or caching change."
+      }
+    ],
+    "httpDetails": [
+      {
+        "url": "http://localhost:4001/",
+        "status": 200,
+        "cacheControl": null,
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:4001/login",
+        "status": 302,
+        "cacheControl": null,
+        "method": "POST"
+      },
+      {
+        "url": "http://localhost:4001/dashboard",
+        "status": 200,
+        "cacheControl": "no-store, no-cache, must-revalidate, private",
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:4001/logout",
+        "status": 302,
+        "cacheControl": null,
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:4001/dashboard",
+        "status": 302,
+        "cacheControl": null,
+        "method": "GET"
+      }
+    ],
+    "consoleErrors": [],
+    "screenshotPath": "data/screenshots/d953ec30-2179-4f8c-a5ce-4726d8684566.png",
+    "engine": "local-playwright",
+    "notes": "Credentials were session-only and were not stored with this run."
+  },
+  {
+    "id": "e2ee11fa-532f-4606-9af8-f6ca0f7e9942",
+    "name": "Demo — localhost dashboard (no-store, should pass)",
+    "targetUrl": "http://localhost:4001",
+    "protectedUrl": "http://localhost:4001/dashboard",
+    "createdAt": "2026-11-09T10:10:59.056Z",
+    "durationMs": 3678,
+    "status": "passed",
+    "steps": [
+      {
+        "id": "Open login page",
+        "label": "Open login page",
+        "status": "passed",
+        "detail": "Loaded http://localhost:4001/ (HTTP complete)",
+        "durationMs": 65
+      },
+      {
+        "id": "Authenticate",
+        "label": "Authenticate",
+        "status": "passed",
+        "detail": "Submitted login form; now at http://localhost:4001/dashboard",
+        "durationMs": 951
+      },
+      {
+        "id": "Open protected page while authenticated",
+        "label": "Open protected page while authenticated",
+        "status": "passed",
+        "detail": "Protected page loaded while authenticated (http://localhost:4001/dashboard)",
+        "durationMs": 22
+      },
+      {
+        "id": "Log out",
+        "label": "Log out",
+        "status": "passed",
+        "detail": "Visited logout URL; now at http://localhost:4001/",
+        "durationMs": 517
+      },
+      {
+        "id": "Revisit protected page after logout (direct)",
+        "label": "Revisit protected page after logout (direct)",
+        "status": "passed",
+        "detail": "Direct revisit after logout: HTTP 200, marker present: false, login form shown: true",
+        "durationMs": 33
+      },
+      {
+        "id": "Back navigation after logout",
+        "label": "Back navigation after logout",
+        "status": "passed",
+        "detail": "Back landed on http://localhost:4001/; marker visible: false; new protected request made: true",
+        "durationMs": 620
+      },
+      {
+        "id": "Forward navigation after logout",
+        "label": "Forward navigation after logout",
+        "status": "info",
+        "detail": "Forward landed on http://localhost:4001/",
+        "durationMs": 514
+      },
+      {
+        "id": "Reload protected page after logout",
+        "label": "Reload protected page after logout",
+        "status": "passed",
+        "detail": "Reload after logout: HTTP 200, marker present: false",
+        "durationMs": 23
+      },
+      {
+        "id": "Capture evidence screenshot",
+        "label": "Capture evidence screenshot",
+        "status": "passed",
+        "detail": "Screenshot captured (retained only for this run; delete after review if it shows sensitive content)",
+        "durationMs": 88
+      }
+    ],
+    "findings": [
+      {
+        "id": "F-1",
+        "severity": "Informational",
+        "title": "No logout exposure observed in this run",
+        "detail": "The protected page was blocked after logout, Back/Forward did not expose private content, and cache headers were checked. This run found no evidence of post-logout exposure for the tested URLs.",
+        "evidence": "See the step-by-step results in this test run.",
+        "recommendation": "Re-run after any auth, routing, or caching change."
+      }
+    ],
+    "httpDetails": [
+      {
+        "url": "http://localhost:4001/",
+        "status": 200,
+        "cacheControl": null,
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:4001/login",
+        "status": 302,
+        "cacheControl": null,
+        "method": "POST"
+      },
+      {
+        "url": "http://localhost:4001/dashboard",
+        "status": 200,
+        "cacheControl": "no-store, no-cache, must-revalidate, private",
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:4001/logout",
+        "status": 302,
+        "cacheControl": null,
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:4001/dashboard",
+        "status": 302,
+        "cacheControl": null,
+        "method": "GET"
+      }
+    ],
+    "consoleErrors": [],
+    "screenshotPath": "data/screenshots/e2ee11fa-532f-4606-9af8-f6ca0f7e9942.png",
+    "engine": "local-playwright",
+    "notes": "Credentials were session-only and were not stored with this run."
+  },
+  {
+    "id": "acbfd11a-528b-421b-8c26-f28a6aa578f2",
+    "name": "Demo — localhost profile (cache finding expected)",
+    "targetUrl": "http://localhost:4001",
+    "protectedUrl": "http://localhost:4001/profile",
+    "createdAt": "2026-11-09T10:10:46.657Z",
+    "durationMs": 4094,
+    "status": "failed",
+    "steps": [
+      {
+        "id": "Open login page",
+        "label": "Open login page",
+        "status": "passed",
+        "detail": "Loaded http://localhost:4001/ (HTTP complete)",
+        "durationMs": 70
+      },
+      {
+        "id": "Authenticate",
+        "label": "Authenticate",
+        "status": "passed",
+        "detail": "Submitted login form; now at http://localhost:4001/dashboard",
+        "durationMs": 949
+      },
+      {
+        "id": "Open protected page while authenticated",
+        "label": "Open protected page while authenticated",
+        "status": "passed",
+        "detail": "Protected page loaded while authenticated (http://localhost:4001/profile)",
+        "durationMs": 20
+      },
+      {
+        "id": "Log out",
+        "label": "Log out",
+        "status": "passed",
+        "detail": "Visited logout URL; now at http://localhost:4001/",
+        "durationMs": 521
+      },
+      {
+        "id": "Revisit protected page after logout (direct)",
+        "label": "Revisit protected page after logout (direct)",
+        "status": "failed",
+        "detail": "Direct revisit after logout still showed protected content (HTTP 200); server no-store re-check: HTTP 0, still serves: false",
+        "durationMs": 30,
+        "evidence": "GET http://localhost:4001/profile -> 200"
+      },
+      {
+        "id": "Back navigation after logout",
+        "label": "Back navigation after logout",
+        "status": "passed",
+        "detail": "Back landed on http://localhost:4001/; marker visible: false; new protected request made: true",
+        "durationMs": 623
+      },
+      {
+        "id": "Forward navigation after logout",
+        "label": "Forward navigation after logout",
+        "status": "info",
+        "detail": "Forward landed on http://localhost:4001/profile",
+        "durationMs": 518
+      },
+      {
+        "id": "Reload protected page after logout",
+        "label": "Reload protected page after logout",
+        "status": "failed",
+        "detail": "Reload after logout still returned HTTP 200 with protected content visible",
+        "durationMs": 22
+      },
+      {
+        "id": "Capture evidence screenshot",
+        "label": "Capture evidence screenshot",
+        "status": "passed",
+        "detail": "Screenshot captured (retained only for this run; delete after review if it shows sensitive content)",
+        "durationMs": 81
+      }
+    ],
+    "findings": [
+      {
+        "id": "F-1",
+        "severity": "High",
+        "title": "Protected page served from browser cache after logout",
+        "detail": "Normal navigation to the protected page after logout still showed private content, but a cache-busting request was correctly blocked by the server. The exposure comes from the browser cache, not from the server re-serving private data — still a real exposure for anyone using the same browser.",
+        "evidence": "GET http://localhost:4001/profile -> 200 after logout, marker present (cached); no-store re-check -> 0 without marker",
+        "recommendation": "Send Cache-Control: no-store, no-cache, must-revalidate, private on all authenticated responses so the browser never stores them."
+      },
+      {
+        "id": "F-2",
+        "severity": "Medium",
+        "title": "Protected page allows caching",
+        "detail": "The protected response allows caching (Cache-Control: public, max-age=3600). Private pages should never be cacheable.",
+        "evidence": "GET http://localhost:4001/profile -> 200, Cache-Control: public, max-age=3600",
+        "recommendation": "Send Cache-Control: no-store, no-cache, must-revalidate, private on all authenticated responses."
+      }
+    ],
+    "httpDetails": [
+      {
+        "url": "http://localhost:4001/",
+        "status": 200,
+        "cacheControl": null,
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:4001/login",
+        "status": 302,
+        "cacheControl": null,
+        "method": "POST"
+      },
+      {
+        "url": "http://localhost:4001/dashboard",
+        "status": 200,
+        "cacheControl": "no-store, no-cache, must-revalidate, private",
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:4001/profile",
+        "status": 200,
+        "cacheControl": "public, max-age=3600",
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:4001/logout",
+        "status": 302,
+        "cacheControl": null,
+        "method": "GET"
+      },
+      {
+        "url": "http://localhost:4001/profile",
+        "status": 302,
+        "cacheControl": null,
+        "method": "GET"
+      }
+    ],
+    "consoleErrors": [],
+    "screenshotPath": "data/screenshots/acbfd11a-528b-421b-8c26-f28a6aa578f2.png",
+    "engine": "local-playwright",
+    "notes": "Credentials were session-only and were not stored with this run."
+  }
+]
