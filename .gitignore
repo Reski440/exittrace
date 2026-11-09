@@ -1,0 +1,6 @@
+node_modules
+.next
+data/runs.json
+data/screenshots
+.env.local
+*.log
