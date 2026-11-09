@@ -1,5 +1,7 @@
 import { runTest } from '../lib/engine'
 import { saveRun } from '../lib/store'
+// Operator-run local script: enables local targets for this process only.
+process.env.ALLOW_LOCAL_TARGETS = 'true'
 async function main() {
   const run = await runTest({
     name: 'Demo — localhost dashboard (no-store, should pass)',
@@ -15,7 +17,7 @@ async function main() {
     allowLocalTargets: true,
     protectedMarker: 'SECRET-7F3A9',
   })
-  saveRun(run)
+  await saveRun(run)
   console.log(JSON.stringify({ id: run.id, status: run.status, findings: run.findings.map((f) => `${f.severity}: ${f.title}`) }, null, 2))
 }
 main().catch((e) => { console.error(e); process.exit(1) })

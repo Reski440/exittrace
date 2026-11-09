@@ -3,6 +3,9 @@ import { saveRun } from '../lib/store'
 
 // Runs ExitTrace against the local demo app (demo/server.js on :4001).
 // Start the demo first in another terminal: `npm run demo`
+// This script is run by the operator on their own machine, so it enables
+// local targets server-side (ALLOW_LOCAL_TARGETS) for this process only.
+process.env.ALLOW_LOCAL_TARGETS = 'true'
 async function main() {
   const run = await runTest({
     name: 'Demo — localhost profile (cache finding expected)',
@@ -18,7 +21,7 @@ async function main() {
     allowLocalTargets: true,
     protectedMarker: 'SECRET-7F3A9',
   })
-  saveRun(run)
+  await saveRun(run)
   console.log(JSON.stringify({ id: run.id, status: run.status, durationMs: run.durationMs, steps: run.steps.map((s) => `${s.label}: ${s.status}`), findings: run.findings.map((f) => `${f.severity}: ${f.title}`) }, null, 2))
 }
 main().catch((e) => { console.error(e); process.exit(1) })
