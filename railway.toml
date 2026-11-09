@@ -1,0 +1,15 @@
+# Railway — ExitTrace worker (Docker).
+# Deploy: railway.com → New Project → Deploy from GitHub repo →
+# Reski440/exittrace, then set the service's Dockerfile path to
+# worker/Dockerfile, or use `railway up` with this file at the repo root.
+# Railway docs recommend at least 1 GB RAM for Playwright Chromium.
+# Trial (30 days, $5 credit, no card) gives 2 vCPU / 1 GB per service;
+# after the trial the Free plan gives $1/mo credit (1 vCPU / 0.5 GB),
+# which is below the Playwright recommendation — expect OOMs unless
+# you move to Hobby ($5/mo, includes $5 usage credit). See README.
+[build]
+builder = "dockerfile"
+dockerfilePath = "worker/Dockerfile"
+
+[deploy]
+restartPolicyType = "on_failure"

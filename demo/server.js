@@ -6,7 +6,7 @@ const express = require('express')
 const app = express()
 app.use(express.urlencoded({ extended: false }))
 const parseCookies = (req) => Object.fromEntries((req.headers.cookie || '').split(';').map((p) => { const [k, ...v] = p.trim().split('='); return [k, decodeURIComponent(v.join('='))] }).filter(([k]) => k))
-const PORT = process.env.DEMO_PORT || 4001
+const PORT = process.env.DEMO_PORT || process.env.PORT || 4001
 const authed = (req) => parseCookies(req).et_demo === 'yes'
 const loginPage = (msg = '') => `<!doctype html><html><head><meta charset="utf-8"><title>Demo — Login</title><style>body{font-family:system-ui;background:#0a0f14;color:#e6edf3;display:grid;place-items:center;min-height:100vh}form{background:#11181f;padding:32px;border-radius:12px}input{display:block;margin:8px 0;padding:10px;width:240px;background:#0a0f14;color:#fff;border:1px solid #26313b;border-radius:8px}button{padding:10px 18px;background:#2563eb;color:#fff;border:0;border-radius:8px}</style></head><body><form method="post" action="/login"><h1>Demo App — Login</h1>${msg ? `<p>${msg}</p>` : ''}<input name="username" placeholder="Username" autocomplete="username"><input name="password" type="password" placeholder="Password" autocomplete="current-password"><button type="submit">Log in</button><p>Demo: demo / demo123</p></form></body></html>`
 app.get('/', (req, res) => res.send(loginPage()))

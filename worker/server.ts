@@ -9,7 +9,7 @@ import { saveRun } from '../lib/store'
 import { effectiveAllowLocalTargets } from '../lib/ssrf'
 import type { TestConfig } from '../lib/types'
 
-const PORT = Number(process.env.WORKER_PORT || 4002)
+const PORT = Number(process.env.WORKER_PORT || process.env.PORT || 4002)
 const TOKEN = process.env.WORKER_TOKEN || ''
 
 const server = http.createServer(async (req, res) => {

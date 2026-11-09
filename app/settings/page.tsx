@@ -24,9 +24,9 @@ export default async function Settings() {
       </section>
       <section className="mt-4 rounded-xl border border-line bg-panel p-4">
         <h2 className="font-semibold">Test history storage</h2>
-        <p className="mt-1 text-sm">Storage: <strong>{storage.backend === 'kv' ? 'Vercel KV (persistent)' : 'Local JSON file'}</strong></p>
+        <p className="mt-1 text-sm">Storage: <strong>{storage.backend === 'kv' ? 'Upstash Redis (persistent)' : 'Local JSON file'}</strong></p>
         <p className="mt-1 text-sm text-muted">{storage.note}</p>
-        {!storage.persistent && <p className="mt-2 text-sm text-muted">To make history permanent on Vercel: Vercel dashboard → Storage → Create Database → KV, then link it to the exittrace project (this sets KV_REST_API_URL and KV_REST_API_TOKEN automatically) and redeploy. See README.</p>}
+        {!storage.persistent && <p className="mt-2 text-sm text-muted">To make history permanent on Vercel: Vercel dashboard → Storage → Browse Marketplace → Upstash Redis, create a database and link it to the exittrace project (this sets UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN automatically) and redeploy. Vercel KV was sunset in Dec 2024 — new stores are Upstash Redis. See README.</p>}
       </section>
       <section className="mt-4 rounded-xl border border-line bg-panel p-4">
         <h2 className="font-semibold">Safety</h2>

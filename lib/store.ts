@@ -11,13 +11,22 @@ const MAX_RUNS = 200
 export type StorageBackend = 'kv' | 'file'
 
 /**
- * Which storage backend is active. Vercel KV is used only when its
- * credentials are present (Vercel auto-injects KV_REST_API_URL and
- * KV_REST_API_TOKEN when a KV database is linked to the project).
+ * Which storage backend is active. Persistent Redis is used only when
+ * its credentials are present. Vercel KV was sunset in December 2024 —
+ * new stores are Upstash Redis via the Vercel Marketplace, which injects
+ * UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN. Older Vercel KV
+ * stores used KV_REST_API_URL / KV_REST_API_TOKEN, and @upstash/redis
+ * accepts those as a fallback, so both names are honoured here.
  * Otherwise the local JSON file is used.
  */
+export function redisConfig(): { url: string; token: string } | null {
+  const url = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL || ''
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN || ''
+  return url && token ? { url, token } : null
+}
+
 export function storageBackend(): StorageBackend {
-  return process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN ? 'kv' : 'file'
+  return redisConfig() ? 'kv' : 'file'
 }
 
 /** True only when history is stored in a persistent backend. */
@@ -27,12 +36,12 @@ export function storageIsPersistent(): boolean {
 
 export function storageInfo(): { backend: StorageBackend; persistent: boolean; note: string } {
   if (storageBackend() === 'kv') {
-    return { backend: 'kv', persistent: true, note: 'Test history is stored in Vercel KV and persists across deployments.' }
+    return { backend: 'kv', persistent: true, note: 'Test history is stored in Upstash Redis (Vercel Marketplace, formerly Vercel KV) and persists across deployments.' }
   }
   return {
     backend: 'file',
     persistent: false,
-    note: 'Test history is stored in a local JSON file (data/runs.json). On Vercel serverless this does not persist — link a Vercel KV database to the project to make history permanent.',
+    note: 'Test history is stored in a local JSON file (data/runs.json). On Vercel serverless this does not persist — install Upstash Redis from the Vercel Marketplace and link it to the project to make history permanent.',
   }
 }
 
@@ -71,9 +80,12 @@ function readFileRuns(): TestRun[] {
  * but no runs have been stored yet.
  */
 async function readKvRuns(): Promise<TestRun[] | null> {
+  const cfg = redisConfig()
+  if (!cfg) return null
   try {
-    const { kv } = await import('@vercel/kv')
-    const val = await kv.get<unknown>(KV_KEY)
+    const { Redis } = await import('@upstash/redis')
+    const redis = new Redis({ url: cfg.url, token: cfg.token })
+    const val = await redis.get<unknown>(KV_KEY)
     if (!val) return []
     if (typeof val === 'string') {
       const parsed = JSON.parse(val) as TestRun[]
@@ -110,22 +122,24 @@ export async function getRun(id: string): Promise<TestRun | null> {
 export async function saveRun(run: TestRun): Promise<TestRun> {
   const clean = cleanRun(run)
   if (storageBackend() === 'kv') {
+    const cfg = redisConfig()
     try {
       const existing = await readKvRuns()
-      if (existing !== null) {
+      if (existing !== null && cfg) {
         // First save seeds the store with the demo runs so the history the
         // dashboard already showed is preserved alongside real runs.
         const base = existing.length ? existing : readSampleRuns()
         const runs = [clean, ...base.filter((r) => r.id !== clean.id)].slice(0, MAX_RUNS)
-        const { kv } = await import('@vercel/kv')
-        await kv.set(KV_KEY, runs)
+        const { Redis } = await import('@upstash/redis')
+        const redis = new Redis({ url: cfg.url, token: cfg.token })
+        await redis.set(KV_KEY, JSON.stringify(runs))
         return clean
       }
-      console.error('Vercel KV unreachable, falling back to local file for this run.')
+      console.error('Upstash Redis unreachable, falling back to local file for this run.')
     } catch (e) {
-      // KV unreachable (bad credentials / network): fall back to the
+      // Redis unreachable (bad credentials / network): fall back to the
       // local file so a completed test run is not lost with a 500.
-      console.error('Vercel KV write failed, falling back to local file:', e instanceof Error ? e.message : String(e))
+      console.error('Upstash Redis write failed, falling back to local file:', e instanceof Error ? e.message : String(e))
     }
   }
   ensureDir()
