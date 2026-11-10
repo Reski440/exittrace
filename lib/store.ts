@@ -13,15 +13,21 @@ export type StorageBackend = 'kv' | 'file'
 /**
  * Which storage backend is active. Persistent Redis is used only when
  * its credentials are present. Vercel KV was sunset in December 2024 —
- * new stores are Upstash Redis via the Vercel Marketplace, which injects
- * UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN. Older Vercel KV
- * stores used KV_REST_API_URL / KV_REST_API_TOKEN, and @upstash/redis
- * accepts those as a fallback, so both names are honoured here.
+ * new stores are Upstash Redis via the Vercel Marketplace. What the
+ * Marketplace actually injects depends on the prefix chosen at link
+ * time: with prefix UPSTASH_REDIS the injected names are
+ * UPSTASH_REDIS_KV_REST_API_URL / UPSTASH_REDIS_KV_REST_API_TOKEN
+ * (the plain UPSTASH_REDIS_REST_URL / UPSTASH_REDIS_REST_TOKEN names
+ * are used by other integrations). Older Vercel KV stores used
+ * KV_REST_API_URL / KV_REST_API_TOKEN, and @upstash/redis accepts
+ * those as a fallback, so all three name pairs are honoured here.
+ * Do NOT use UPSTASH_REDIS_KV_URL or UPSTASH_REDIS_REDIS_URL — those
+ * are redis:// URLs, not the REST endpoint the REST client needs.
  * Otherwise the local JSON file is used.
  */
 export function redisConfig(): { url: string; token: string } | null {
-  const url = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL || ''
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN || ''
+  const url = process.env.UPSTASH_REDIS_REST_URL || process.env.UPSTASH_REDIS_KV_REST_API_URL || process.env.KV_REST_API_URL || ''
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.UPSTASH_REDIS_KV_REST_API_TOKEN || process.env.KV_REST_API_TOKEN || ''
   return url && token ? { url, token } : null
 }
 
